@@ -1,5 +1,7 @@
 import sys
 import argparse
+
+from definitions import ROOT_DIR
 from utils.doc_utils import *
 from utils.misc import listget
 
@@ -16,7 +18,7 @@ subparsers = parser.add_subparsers()
 
 # add subparser for onto_creator
 p_create_ontology = subparsers.add_parser('onto_creator')
-p_create_ontology.add_argument('-s', '--source', dest='source', default='')
+p_create_ontology.add_argument('-s', '--source', dest='source', default=ROOT_DIR+'/lib/tree.py')
 p_create_ontology.set_defaults(func=create_ontology_gateway)
 
 
