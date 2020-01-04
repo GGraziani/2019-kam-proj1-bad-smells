@@ -14,7 +14,7 @@ def create_ontology_gateway(args):
 parser = argparse.ArgumentParser()
 subparsers = parser.add_subparsers()
 
-# add subparser for find_god_classes
+# add subparser for onto_creator
 p_create_ontology = subparsers.add_parser('onto_creator')
 p_create_ontology.add_argument('-s', '--source', dest='source', default='')
 p_create_ontology.set_defaults(func=create_ontology_gateway)
