@@ -1,7 +1,7 @@
 from utils.misc import indent
 
 DOCSTRING = '''
-2019-proj1-bad-smells
+Knowledge Analysis and Management 2019 - Bad Smells
 by Gustavo Graziani
 
 Commands:
@@ -21,6 +21,8 @@ onto_creator:
         $ python3 bad_smells.py onto_creator
 
     flags:
+    -s <path-to-file> | --source <path-to-path>:
+        The path to the "tree.py" file. Default is "ROOT_DIR/lib/tree.py"
 '''
 }
 
