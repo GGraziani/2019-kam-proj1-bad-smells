@@ -5,13 +5,13 @@ from owlready2 import get_ontology
 
 from ontology.visitor import Visitor
 
-from definitions import RES_PATH
+from definitions import *
 
 ONTO_PATH = os.path.join(RES_PATH, 'tree.owl')
 
 
 def create_ontology(file_path):
-    print('\n> Creating new ontology for file "%s"... ' % file_path)
+    print('\n> Creating new ontology for file "%s"... ' % os.path.basename(file_path))
 
     with open(file_path, "r") as source:
         tree = ast.parse(source.read())
@@ -22,7 +22,7 @@ def create_ontology(file_path):
     visitor.visit(tree)
     onto.save(ONTO_PATH, format="rdfxml")
 
-    print('> New ontology has been saved to file "%s"' % ONTO_PATH)
+    print('> New ontology saved to file "%s"' % os.path.relpath(ONTO_PATH, ROOT_DIR))
 
 
 def create_ontology_argparse(args):

@@ -11,18 +11,17 @@ class Visitor(ast.NodeVisitor):
         ast.NodeVisitor.generic_visit(self, node)
         with self.onto as onto:
             if type(node) == ast.ClassDef:
-                for a in node.bases:
-                    if a.id == "Node":
+                for obj in node.bases:
+                    if obj.id == "Node":
                         types.new_class(node.name, (Thing,))
                     else:
-                        types.new_class(node.name, (onto[a.id],))
+                        types.new_class(node.name, (onto[obj.id],))
 
             elif type(node) == ast.Assign:
-                for b in node.value.elts:
-                    if b.s != "body" and b.s != "parameters" and b.s != "name":
-                        types.new_class(b.s, (DataProperty,))
-                    if b.s == "name":
+                for el in node.value.elts:
+                    if el.s == "body" or el.s == "parameters":
+                        types.new_class(el.s, (ObjectProperty,))
+                    elif el.s == "name":
                         types.new_class("jname", (DataProperty,))
-                    if b.s == "body" or b.s == "parameters":
-                        types.new_class(b.s, (ObjectProperty,))
-
+                    elif el.s != "name":
+                        types.new_class(el.s, (DataProperty,))
