@@ -6,8 +6,6 @@ from ontology.visitor import Visitor
 
 from definitions import *
 
-ONTO_PATH = os.path.join(RES_PATH, 'tree.owl')
-
 
 def create_ontology(file_path):
     print('\n> Creating new ontology for file "%s"... ' % os.path.basename(file_path))
@@ -21,12 +19,12 @@ def create_ontology(file_path):
     visitor.visit(tree)
     onto.save(ONTO_PATH, format="rdfxml")
 
-    print('> New ontology saved to file "%s"' % os.path.relpath(ONTO_PATH, ROOT_DIR))
+    print('> New ontology saved to file "%s"' % os.path.relpath(ONTO_PATH, PROJ_ROOT))
 
 
 def create_ontology_argparse(args):
-    if args.source is None or not (os.path.exists(args.source) and os.path.isfile(args.source)):
-        print('Enter a valid path to a a file "tree.py"...')
+    if args.path is None or not (os.path.exists(args.path) and os.path.isfile(args.path)):
+        print('Enter a valid path to a file "tree.py"...')
         sys.exit(0)
 
-    create_ontology(file_path=args.source)
+    create_ontology(file_path=args.path)
