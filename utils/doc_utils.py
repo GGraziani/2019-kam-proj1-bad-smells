@@ -6,6 +6,7 @@ by Gustavo Graziani
 
 Commands:
 {onto_creator}
+{individ_creator}
 
 
 TO SEE DETAILS ON EACH COMMAND, RUN
@@ -21,8 +22,20 @@ onto_creator:
         $ python3 bad_smells.py onto_creator
 
     flags:
-    -s <path-to-file> | --source <path-to-path>:
-        The path to the "tree.py" file. Default is "ROOT_DIR/lib/tree.py"
+    -s <path-to-file> | --source <path-to-file>:
+        The path to the "tree.py" file. Default is "PROJ_ROOT/lib/tree.py"
+''',
+    'individ_creator': '''
+individ_creator:
+    Populates the ontology (tree.owl) with instances of ClassDeclaration, MethodDeclaration, FieldDeclaration, 
+    Statement subclasses (e.g., IfStatement, WhileStatement, etc.) and FormalParameter.
+
+    Example usage:
+        $ python3 bad_smells.py individ_creator
+
+    flags:
+    -s <path-to-source> | --source <path-to-source>:
+        The path to a directory containing java files. Default is "PROJ_ROOT/lib/android-chess/app/src/main/java/jwtc/chess"
 '''
 }
 
