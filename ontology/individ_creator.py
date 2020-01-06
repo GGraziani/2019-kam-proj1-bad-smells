@@ -28,7 +28,7 @@ def process_file(ast, onto):
 def create_member(cd, member, onto):
     if type(member) == javalang.tree.FieldDeclaration:
         create_fields(cd, member, onto)
-    elif type(member) == javalang.tree.MethodDeclaration or type(member) == javalang.tree.MethodDeclaration:
+    elif type(member) == javalang.tree.MethodDeclaration or type(member) == javalang.tree.ConstructorDeclaration:
         create_method(cd, member, onto)
 
 
@@ -42,7 +42,23 @@ def create_fields(cd, field, onto):
 def create_method(cd, method, onto):
     md = onto[method.__class__.__name__]()
     md.jname = [method.name]
+    add_stmts(md, method, onto)
+    add_params(md, method, onto)
     cd.body.append(md)
+
+
+def add_stmts(md, method, onto):
+    for _, statement in method.filter(javalang.tree.Statement):
+        if type(statement) != javalang.tree.Statement:
+            s_type = statement.__class__.__name__
+            s = onto[s_type]()
+            md.body.append(s)
+
+
+def add_params(md, method, onto):
+    for _, statement in method.parameters:
+        fp = onto['FormalParameter']()
+        md.parameters.append(fp)
 
 
 def populate_ontology_argparse(args):
