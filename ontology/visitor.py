@@ -21,7 +21,7 @@ class Visitor(ast.NodeVisitor):
                 for el in node.value.elts:
                     if el.s == "body" or el.s == "parameters":
                         types.new_class(el.s, (ObjectProperty,))
-                    elif el.s == "name":
-                        types.new_class("jname", (DataProperty,))
-                    elif el.s != "name":
-                        types.new_class(el.s, (DataProperty,))
+                    else:
+                        types.new_class(
+                            "jname" if el.s == "name" else el.s,
+                            (DataProperty,))
