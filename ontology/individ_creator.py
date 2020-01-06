@@ -14,13 +14,35 @@ def populate_ontology(onto, source):
                 ast = javalang.parse.parse(j_file.read())
                 process_file(ast, onto)
 
-    # onto.save(P_ONTO_PATH, format="rdfxml")
+    onto.save(P_ONTO_PATH, format="rdfxml")
 
 
 def process_file(ast, onto):
     for _, node in ast.filter(javalang.tree.ClassDeclaration):
         cd = onto['ClassDeclaration']()
         cd.jname = [node.name]
+        for member in node.body:
+            create_member(cd, member, onto)
+
+
+def create_member(cd, member, onto):
+    if type(member) == javalang.tree.FieldDeclaration:
+        create_fields(cd, member, onto)
+    elif type(member) == javalang.tree.MethodDeclaration or type(member) == javalang.tree.MethodDeclaration:
+        create_method(cd, member, onto)
+
+
+def create_fields(cd, field, onto):
+    for f in field.declarators:
+        fd = onto['FieldDeclaration']()
+        fd.jname = [f.name]
+        cd.body.append(fd)
+
+
+def create_method(cd, method, onto):
+    md = onto[method.__class__.__name__]()
+    md.jname = [method.name]
+    cd.body.append(md)
 
 
 def populate_ontology_argparse(args):
