@@ -1,7 +1,7 @@
 import sys
 import argparse
 
-from definitions import ROOT_DIR
+from definitions import *
 from utils.doc_utils import *
 from utils.misc import listget
 
@@ -13,13 +13,23 @@ def create_ontology_gateway(args):
     onto_creator.create_ontology_argparse(args)
 
 
+def populate_ontology_gateway(args):
+    from ontology import individ_creator
+    individ_creator.populate_ontology_argparse(args)
+
+
 parser = argparse.ArgumentParser()
 subparsers = parser.add_subparsers()
 
 # add subparser for onto_creator
 p_create_ontology = subparsers.add_parser('onto_creator')
-p_create_ontology.add_argument('-s', '--source', dest='source', default=ROOT_DIR+'/lib/tree.py')
+p_create_ontology.add_argument('-p', '--path', dest='path', default=TREE_PATH)
 p_create_ontology.set_defaults(func=create_ontology_gateway)
+
+# add subparser for individ_creator
+p_populate_ontology = subparsers.add_parser('individ_creator')
+p_populate_ontology.add_argument('-s', '--source', dest='source', default=SOURCE_PATH)
+p_populate_ontology.set_defaults(func=populate_ontology_gateway)
 
 
 def main(argv):
