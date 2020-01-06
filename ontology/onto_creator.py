@@ -1,5 +1,4 @@
 import ast
-import os
 import sys
 from owlready2 import get_ontology
 
