@@ -1,5 +1,8 @@
 import os
 
-ROOT_DIR = os.path.dirname(os.path.abspath(__file__))   # Project root path
+PROJ_ROOT = os.path.dirname(os.path.abspath(__file__))   # Project root path
 
-RES_PATH = os.path.join(ROOT_DIR, 'res')  # Resources
+TREE_PATH = os.path.join(PROJ_ROOT, 'lib/tree.py')
+ONTO_PATH = os.path.join(PROJ_ROOT, 'res/tree.owl')
+SOURCE_PATH = os.path.join(PROJ_ROOT, 'lib/android-chess/app/src/main/java/jwtc/chess')
+P_ONTO_PATH = os.path.join(PROJ_ROOT, 'res/tree2.owl')
