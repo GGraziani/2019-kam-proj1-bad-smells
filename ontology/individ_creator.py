@@ -1,12 +1,26 @@
 import os
 import sys
+import javalang.tree
 import owlready2
 
-from definitions import ONTO_PATH
+from definitions import *
 
 
 def populate_ontology(onto, source):
-    print(onto, source)
+    for file in os.listdir(source):
+        if file.endswith('.java'):
+            f_path = os.path.join(source, file)
+            with open(f_path) as j_file:
+                ast = javalang.parse.parse(j_file.read())
+                process_file(ast, onto)
+
+    # onto.save(P_ONTO_PATH, format="rdfxml")
+
+
+def process_file(ast, onto):
+    for _, node in ast.filter(javalang.tree.ClassDeclaration):
+        cd = onto['ClassDeclaration']()
+        cd.jname = [node.name]
 
 
 def populate_ontology_argparse(args):
