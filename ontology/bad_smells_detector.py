@@ -20,6 +20,7 @@ def find_bad_smells():
     get_large_classes(g=graph)
     get_methods_or_constructors_with_switch(g=graph)
     get_methods_or_constructors_with_long_parameter_list(g=graph)
+    get_data_classes(g=graph)
 
 
 def exec_query(query, g):
@@ -118,7 +119,7 @@ def get_methods_or_constructors_with_switch(g):
     out = open(QUERIES_PATH+"/3. MethodWithSwitch-ConstructorWithSwitch.txt", "w")
     out.write("3.1 - Method With Switch:\n\n")
     for row in methods:
-        out.write(row.cn+" : "+row.mn+" : "+row.tot+"\n")
+        out.write(row.cn+" : "+row.mn+"\n")
 
     constructors = exec_query(
         """SELECT ?cn ?con ?s (COUNT(*)AS ?tot) WHERE {
@@ -134,7 +135,7 @@ def get_methods_or_constructors_with_switch(g):
 
     out.write("\n\n3.2 - Long Constructor:\n\n")
     for row in constructors:
-        out.write(row.cn+" : "+row.con+" : "+row.tot+"\n")
+        out.write(row.cn+" : "+row.con+"\n")
 
     out.close()
 
@@ -183,6 +184,51 @@ def get_methods_or_constructors_with_long_parameter_list(g):
     out.close()
 
     print(' saved in "4. MethodWithLongParameterList-ConstructorWithLongParameterList.txt"')
+
+
+def get_data_classes(g):
+
+    print('\t - Searching for "DataClass"...', end='')
+
+    getters_setters = exec_query(
+        """SELECT ?mn ?cn (COUNT(*)AS ?tot) WHERE {
+                ?c a tree:ClassDeclaration .
+                ?c tree:jname ?cn .
+                ?c tree:body ?m .
+                ?m a tree:MethodDeclaration .
+                ?m tree:jname ?mn .
+                FILTER (regex(?mn, "get.*") || regex(?mn, "set.*"))
+            } GROUP BY ?cn
+        """, g)
+
+    out = open(QUERIES_PATH+"/5. DataClass.txt", "w")
+    out.write("5 - Data Class:\n\n")
+
+    all_methods = exec_query(
+        """SELECT ?mn ?cn (COUNT(*)AS ?tot) WHERE {
+                ?c a tree:ClassDeclaration .
+                ?c tree:jname ?cn .
+                ?c tree:body ?m .
+                ?m a tree:MethodDeclaration .
+                ?m tree:jname ?mn .
+            } GROUP BY ?cn
+        """, g)
+
+    for row in getters_setters:
+        tot = get_class(row.cn, all_methods)
+        is_data_class = str(row.tot == tot.tot)
+        out.write('%s : %s filtered - %s unfiltered => DataClass: %s\n' % (row.cn, row.tot, tot.tot, is_data_class))
+
+    out.close()
+
+    print(' saved in "5. DataClass.txt"')
+
+
+def get_class(name, class_list):
+    for el in class_list:
+        if el.cn == name:
+            return el
+    return None
 
 
 def find_bad_smells_argparse(args):
