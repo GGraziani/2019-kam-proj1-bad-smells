@@ -51,7 +51,7 @@ def get_long_methods_and_constructors(g):
     out = open(QUERIES_PATH+"/1. LongMethod-LongConstructor.txt", "w")
     out.write("1.1 - Long Method:\n\n")
     for row in methods:
-        out.write(row.cn+" : "+row.mn+" : "+row.tot+"\n")
+        out.write(row.cn+" : "+row.mn+" - "+row.tot+" statements\n")
 
     constructors = exec_query(
         """SELECT ?cn ?con ?s (COUNT(*)AS ?tot) WHERE {
@@ -63,11 +63,12 @@ def get_long_methods_and_constructors(g):
                 ?cd tree:body ?s .
                 ?s a/rdfs:subClassOf* tree:Statement .
             } GROUP BY ?cd
+            HAVING (COUNT(?s) >= 20)
         """, g)
 
     out.write("\n\n1.2 - Long Constructor:\n\n")
     for row in constructors:
-        out.write(row.cn+" : "+row.con+" : "+row.tot+"\n")
+        out.write(row.cn+" : "+row.con+" : "+row.tot+" statements\n")
 
     out.close()
 
@@ -92,7 +93,7 @@ def get_large_classes(g):
     out = open(QUERIES_PATH+"/2. LargeClass.txt", "w")
     out.write("2 - Large Class:\n\n")
     for row in classes:
-        out.write(row.cn+" : "+row.tot+"\n")
+        out.write(row.cn+" : "+row.tot+" methods\n")
 
     out.close()
 
@@ -162,7 +163,7 @@ def get_methods_or_constructors_with_long_parameter_list(g):
     out = open(QUERIES_PATH+"/4. MethodWithLongParameterList-ConstructorWithLongParameterList.txt", "w")
     out.write("4.1 - Method With Long Parameter List:\n\n")
     for row in methods:
-        out.write(row.cn+" : "+row.mn+" : "+row.tot+"\n")
+        out.write(row.cn+" : "+row.mn+" - "+row.tot+" parameters\n")
 
     constructors = exec_query(
         """SELECT ?cn ?con ?s (COUNT(*)AS ?tot) WHERE {
@@ -179,7 +180,7 @@ def get_methods_or_constructors_with_long_parameter_list(g):
 
     out.write("\n\n4.2 - Constructor With Long Parameter List:\n\n")
     for row in constructors:
-        out.write(row.cn+" : "+row.con+" : "+row.tot+"\n")
+        out.write(row.cn+" : "+row.con+" : "+row.tot+" parameters\n")
 
     out.close()
 
