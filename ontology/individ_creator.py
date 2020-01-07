@@ -6,6 +6,8 @@ from definitions import *
 
 
 def populate_ontology(onto, source):
+    print('\n> Populating ontology "%s" with source "%s"... ' % (onto.base_iri, os.path.relpath(source, PROJ_ROOT)))
+
     for file in os.listdir(source):
         if file.endswith('.java'):
             f_path = os.path.join(source, file)
@@ -14,6 +16,8 @@ def populate_ontology(onto, source):
                 process_file(ast, onto)
 
     onto.save(P_ONTO_PATH, format="rdfxml")
+
+    print('> Ontology saved to file "%s"' % os.path.relpath(P_ONTO_PATH, PROJ_ROOT))
 
 
 def process_file(ast, onto):

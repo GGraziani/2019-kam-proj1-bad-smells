@@ -18,6 +18,11 @@ def populate_ontology_gateway(args):
     individ_creator.populate_ontology_argparse(args)
 
 
+def bad_smells_gateway(args):
+    from ontology import bad_smells_detector
+    bad_smells_detector.find_bad_smells_argparse(args)
+
+
 parser = argparse.ArgumentParser()
 subparsers = parser.add_subparsers()
 
@@ -30,6 +35,10 @@ p_create_ontology.set_defaults(func=create_ontology_gateway)
 p_populate_ontology = subparsers.add_parser('individ_creator')
 p_populate_ontology.add_argument('-s', '--source', dest='source', default=SOURCE_PATH)
 p_populate_ontology.set_defaults(func=populate_ontology_gateway)
+
+# add subparser for bad_smells_detector
+p_bad_smells = subparsers.add_parser('find_bad_smells')
+p_bad_smells.set_defaults(func=bad_smells_gateway)
 
 
 def main(argv):
