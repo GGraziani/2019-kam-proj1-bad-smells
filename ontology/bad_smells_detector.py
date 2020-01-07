@@ -19,6 +19,7 @@ def find_bad_smells():
     get_long_methods_and_constructors(g=graph)
     get_large_classes(g=graph)
     get_methods_or_constructors_with_switch(g=graph)
+    get_methods_or_constructors_with_long_parameter_list(g=graph)
 
 
 def exec_query(query, g):
@@ -128,7 +129,8 @@ def get_methods_or_constructors_with_switch(g):
                 ?cd tree:jname ?con .
                 ?cd tree:body ?s .
                 ?s a tree:SwitchStatement .
-            } GROUP BY ?cd""", g)
+            } GROUP BY ?cd
+        """, g)
 
     out.write("\n\n3.2 - Long Constructor:\n\n")
     for row in constructors:
@@ -139,7 +141,48 @@ def get_methods_or_constructors_with_switch(g):
     print(' saved in "3. MethodWithSwitch-ConstructorWithSwitch.txt"')
 
 
+def get_methods_or_constructors_with_long_parameter_list(g):
 
+    print('\t - Searching for "MethodWithLongParameterList, ConstructorWithLongParameterList"...', end='')
+
+    methods = exec_query(
+        """SELECT ?cn ?mn ?s (COUNT(*)AS ?tot) WHERE {
+                ?c a tree:ClassDeclaration .
+                ?c tree:jname ?cn .
+                ?c tree:body ?m .
+                ?m a tree:MethodDeclaration .
+                ?m tree:jname ?mn .
+                ?m tree:parameters ?s .
+                ?s a tree:FormalParameter .
+            } GROUP BY ?m
+            HAVING (COUNT(?s) >= 5)
+        """, g)
+
+    out = open(QUERIES_PATH+"/4. MethodWithLongParameterList-ConstructorWithLongParameterList.txt", "w")
+    out.write("4.1 - Method With Long Parameter List:\n\n")
+    for row in methods:
+        out.write(row.cn+" : "+row.mn+" : "+row.tot+"\n")
+
+    constructors = exec_query(
+        """SELECT ?cn ?con ?s (COUNT(*)AS ?tot) WHERE {
+                ?c a tree:ClassDeclaration .
+                ?c tree:jname ?cn .
+                ?c tree:body ?cd .
+                ?cd a tree:ConstructorDeclaration .
+                ?cd tree:jname ?con .
+                ?cd tree:parameters ?s .
+                ?s a tree:FormalParameter .
+            } GROUP BY ?cd
+            HAVING (COUNT(?s) >= 5)
+        """, g)
+
+    out.write("\n\n4.2 - Constructor With Long Parameter List:\n\n")
+    for row in constructors:
+        out.write(row.cn+" : "+row.con+" : "+row.tot+"\n")
+
+    out.close()
+
+    print(' saved in "4. MethodWithLongParameterList-ConstructorWithLongParameterList.txt"')
 
 
 def find_bad_smells_argparse(args):
