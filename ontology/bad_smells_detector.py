@@ -134,7 +134,7 @@ def get_methods_or_constructors_with_switch(g):
             } GROUP BY ?cd
         """, g)
 
-    out.write("\n\n3.2 - Long Constructor:\n\n")
+    out.write("\n\n3.2 - Constructor With Switch:\n\n")
     for row in constructors:
         out.write(row.cn+" : "+row.con+"\n")
 
@@ -218,7 +218,8 @@ def get_data_classes(g):
     for row in getters_setters:
         tot = get_class(row.cn, all_methods)
         is_data_class = str(row.tot == tot.tot)
-        out.write('%s : %s filtered - %s unfiltered => DataClass: %s\n' % (row.cn, row.tot, tot.tot, is_data_class))
+        out.write('%s : %s filtered - %s unfiltered => DataClass: %s\n' %
+                  (row.cn, row.tot, tot.tot, is_data_class))
 
     out.close()
 
