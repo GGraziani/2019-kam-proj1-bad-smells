@@ -1,3 +1,6 @@
+import os
+
+
 def indent(text, spaces=4):
     spaces = ' ' * spaces
     return '\n'.join(spaces + line if line.strip() != '' else line for line in text.split('\n'))
@@ -8,3 +11,8 @@ def listget(li, index, fallback=None):
         return li[index]
     except IndexError:
         return fallback
+
+
+def mkdir(path):
+    if not os.path.exists(path):
+        os.makedirs(path)

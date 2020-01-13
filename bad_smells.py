@@ -3,7 +3,7 @@ import argparse
 
 from definitions import *
 from utils.doc_utils import *
-from utils.misc import listget
+from utils.misc import listget, mkdir
 
 
 # add one gateway function for each functionality
@@ -42,6 +42,7 @@ p_bad_smells.set_defaults(func=bad_smells_gateway)
 
 
 def main(argv):
+
     helpstrings = {'-h', '--help'}
 
     command = listget(argv, 0, '').lower()
@@ -60,6 +61,8 @@ def main(argv):
     if argument in helpstrings:
         print(MODULE_DOCSTRINGS[command])
         return 1
+
+    mkdir(os.path.join(PROJ_ROOT, 'res'))
 
     args = parser.parse_args(argv)
     args.func(args)
